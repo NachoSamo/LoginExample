@@ -1,9 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const seed = require('./seed/mockBD');
 
 const app = express();
 const PORT = process.env.PORT;
+
+const userRoutes = require('./routes/usuario');
+const sequelize = require('./data/database');
 
 app.use(cors(
     {origin: 'http://localhost:5173',
@@ -13,10 +17,21 @@ app.use(cors(
 
 app.use(express.json());
 
+//rutas
+app.use('/api/user', userRoutes)
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running: http://localhost:${PORT}`);
-});
+sequelize.sync().then(() => {
+    console.log('Database synchronized');
+    seed.mockBd();
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    }
+    );
+}).catch((error) => {
+    console.error('Unable to connect to the database:', error);
+}
+);
