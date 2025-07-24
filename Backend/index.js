@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-sequelize.sync( {force:true }).then(() => {
+sequelize.sync().then(() => {
     console.log('Database synchronized');
     seed.mockBd();
     app.listen(PORT, () => {

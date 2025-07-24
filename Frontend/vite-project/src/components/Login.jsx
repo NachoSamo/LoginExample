@@ -2,18 +2,20 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { login } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Login = () => {
 
-  const { register, handleSubmit, formState:{ errors }, setError } = useForm()
+  const { register, handleSubmit, formState: { errors }, setError } = useForm()
 
-  const onSubmit = async (data) =>{
+  const onSubmit = async (data) => {
 
     try {
-      
+
       const userData = {
-      userName: data.userName,
-      password: data.password,} // un array con los datos del login 
+        userName: data.userName,
+        password: data.password,
+      } // un array con los datos del login 
 
       await login(userData);
       // le pasamos a login() los parametros para que ande, esa funcion luego se 
@@ -28,7 +30,8 @@ const Login = () => {
       console.error("Login failed:", error)
       setError('root.serverError', {
         type: 'manual',
-        message: error.response?.data?.msg || "Error al iniciar sesión"})
+        message: error.response?.data?.msg || "Error al iniciar sesión"
+      })
 
     }
   };
@@ -39,8 +42,7 @@ const Login = () => {
     navigate("/")
   }
 
-  const handleRegister = () =>
-  {
+  const handleRegister = () => {
     navigate("/register")
   }
 
@@ -48,7 +50,7 @@ const Login = () => {
     <div className="login-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {errors.root?.serverError && <p style={{color: 'red'}}>{errors.root.serverError.message}</p>}
+        {errors.root?.serverError && <p style={{ color: 'red' }}>{errors.root.serverError.message}</p>}
         <div className="form-group">
           <label className="form-label">Username:</label>
           <input
@@ -70,18 +72,17 @@ const Login = () => {
         <button type="submit">Login</button>
         <button type="button" onClick={handleCancel}>Cancel</button>
       </form>
+      <div className="links" style={{ marginTop: '15px' }}>
+        <Link to="/forgot-password">Forgot your password?</Link>
+      </div>
       <p>
         Don't have an account?{" "}
-        <a
-          href="#"
-          onClick={e => {
-            e.preventDefault();
-            handleRegister();
-          }}
+        <Link
+          to="/register"
           style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
         >
           Register here
-        </a>
+        </Link>
       </p>
     </div>
   );

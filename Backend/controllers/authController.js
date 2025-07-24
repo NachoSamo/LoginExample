@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/usuarioModel');
+const { sendPasswordResetEmail } = require('../services/emailService');
+const crypto = require('crypto');
+const { Sequelize, DataTypes, Op } = require('sequelize');
 
 
 exports.login = async (req, res) => {
@@ -80,3 +83,75 @@ exports.register = async (req, res) => {
         res.status(500).json({ msg: 'Server error' });
     }
 };
+
+
+exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ msg: 'Please provide your email' });
+    }
+
+    try {
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            console.log('User not found for password reset: ${email}');
+            return res.status(404).json({ msg: 'If the mail is in the dataBase, you will recibe an email' });
+        }
+        
+
+        const resetCode = crypto.randomInt(100000, 999999).toString();
+        user.resetPasswordCode = resetCode;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiration
+
+        await user.save();
+
+        //enviar el correo electrónico con el código de restablecimiento
+        const emailSent = await sendPasswordResetEmail(user.email, resetCode);
+        if (!emailSent) {
+            return res.status(500).json({ msg: 'Failed to send reset email, try it late' });
+        }
+        res.status(200).json({ msg: 'Password reset email sent, if the email is register' });
+
+    } catch (error) {
+        console.error('Error during password reset:', error);
+        res.status(500).json({ msg: 'Server error' });
+    }
+}
+
+exports.resetPassword = async (req, res) => {
+    const { email, code, newPassword } = req.body;
+
+    if (!email || !code || !newPassword) {
+        return res.status(400).json({ msg: 'Please provide all fields' });
+    }
+
+    try {
+        const user = await User.findOne({ where:{
+            email,
+            resetPasswordCode: code,
+            resetPasswordExpires: { [Sequelize.Op.gt]: Date.now() } 
+
+
+        } 
+    });
+
+        if (!user) {
+            return res.status(400).json({ msg: 'Invalid or expired reset code' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+        user.resetPasswordCode = null;
+        user.resetPasswordExpires = null;
+
+        await user.save();
+
+        res.status(200).json({ msg: 'Password has been reset successfully' });
+        
+
+    } catch (error) {
+        console.error('Error during password reset:', error);
+        res.status(500).json({ msg: 'Server error' });
+    }
+}

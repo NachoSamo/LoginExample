@@ -38,9 +38,31 @@ const logout = async() => {
     
 };
 
+const forgotPassword = async (email) => {
+    try {
+        const response = await apiClient.post('auth/forgot-password', { email });
+        return response.data;
+    } catch (error) {
+        console.error("Error during forgot password:", error);
+        throw error;
+    }
+}
+
+const resetPassword = async (data) => {
+    try {
+        const response = await apiClient.post('auth/reset-password', data);
+        return response.data;
+    } catch (error) {
+        console.error("Error during reset password:", error);
+        throw error;
+    }
+}
+
 
 export {
     logout,
     login,
-    register
+    register,
+    forgotPassword,
+    resetPassword
 }
