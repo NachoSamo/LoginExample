@@ -2,29 +2,27 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const seed = require('./seed/mockBD');
+const sequelize = require('./data/database');
 
 const app = express();
 const PORT = process.env.PORT;
 
 const userRoutes = require('./routes/usuario');
-const sequelize = require('./data/database');
+const authRoute = require('./routes/auth')
 
-app.use(cors(
-    {origin: 'http://localhost:5173',
-    credentials: true,
-    }
-));
+app.use(cors());
 
 app.use(express.json());
 
 //rutas
 app.use('/api/user', userRoutes)
+app.use('/api/auth', authRoute)
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-sequelize.sync().then(() => {
+sequelize.sync( {force:true }).then(() => {
     console.log('Database synchronized');
     seed.mockBd();
     app.listen(PORT, () => {

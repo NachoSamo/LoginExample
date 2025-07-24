@@ -1,19 +1,53 @@
 import React from "react";
-import {useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom'
+import { register as registerService } from '../services/authService';
 
-const Register = (onSave, onCancel) => {
+const Register = () => {
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors }, setError } = useForm();
+
+  const navigate = useNavigate()
+
+  const handleClean = () => {
+    reset();
+  };
 
   const handleCancel = () => {
-    reset();
-    if (onCancel) onCancel();
-  };
+    navigate("/login")
+  }
+
+
+  const onSubmit = async (data) => {
+    try {
+      const userData = { // creamos un map con toda la data que se ingresa en los inputs del form wachoo
+        name: data.name,
+        surname: data.surname,
+        userName: data.username,
+        email: data.email,
+        password: data.password
+      };
+
+      await registerService(userData); // si esta funcion tira la buena procede a confirmar la creacion del usuario
+
+      alert("Registation succesfull complete!");
+      navigate("/login");
+      window.location.reload();
+
+    } catch (error) {
+      console.error("Registration failed:", error);
+      setError('root.serverError', {
+        type: 'manual',
+        message: error.response?.data?.msg || 'Error during registration'
+      });
+    }
+  }
 
   return (
     <div className="register-container">
       <h2>Register</h2>
-      <form onSubmit={handleSubmit(onSave)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {errors.root?.serverError && <p style={{color: 'red'}}>{errors.root.serverError.message}</p>}
         <div className="form-group">
           <label className="form-label">Name:</label>
           <input
@@ -85,9 +119,19 @@ const Register = (onSave, onCancel) => {
           {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
         </div>
         <button type="submit">Register</button>
+        <button type="button" onClick={handleClean}> Clean </button>
         <button type="button" onClick={handleCancel}>Cancel</button>
       </form>
-      <p>Already have an account? <a href="/login">Login here</a></p>
+      <p>Already have an account? <a
+          href="#"
+          onClick={e => {
+            e.preventDefault();
+            handleCancel();
+          }}
+          style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+        >
+          Login here
+        </a></p>
     </div>
   );
 }
