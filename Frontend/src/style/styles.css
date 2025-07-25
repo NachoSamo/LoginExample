@@ -1,23 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --primary-color: #ff4d4d;
+  --primary-hover: #e60000;
+  --secondary-color: #6c757d;
+  --secondary-hover: #5a6268;
+  --background-color: #ffb3b3;
+  --text-color: #333;
+  --text-light: #fff;
+  --border-color: #ccc;
+  --error-color: #d93025;
+  --success-color: #1e8e3e;
+}
+
 html,
 body {
-    background: #ffb3b3 ;
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    font-family: 'Poppins', sans-serif; 
+    background: var(--background-color);
+    color: var(--text-color);
 }
 
-.div-container {
-    
+.page-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; 
+    box-sizing: border-box;
+}
+
+
+.content-card {
     background: rgba(255, 255, 255, 0.35);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 18px;
     border: 1px solid rgba(255, 255, 255, 0.28);
-    width: auto;
-    min-width: 320px;
-    max-width: 400px;
-    height: auto;
-    min-height: 300px;
+    width: 100%; 
+    max-width: 420px;
+    padding: 30px 40px; 
+    box-sizing: border-box;
+    text-align: center; 
 }
 
+.content-card h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+/* --- Formularios --- */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left; 
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(255, 77, 77, 0.5);
+}
+
+.form-input[readOnly],
+.form-input:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* --- Botones --- */
+.button-group {
+    display: flex;
+    gap: 15px; 
+    margin-top: 25px;
+    flex-wrap: wrap; 
+}
+
+.form-button {
+    flex-grow: 1; 
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.form-button:hover {
+    transform: translateY(-2px); 
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: #f0f0f0; 
+    color: var(--text-color);
+    border: 1px solid #ddd;
+}
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+.form-button:disabled {
+    background-color: var(--secondary-color);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- Enlaces y Mensajes --- */
+.form-links {
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+.form-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+.form-links a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.8em;
+    margin-top: 5px;
+    text-align: left;
+}
+
+.success-message {
+    color: var(--success-color);
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+/* --- Estilos para Perfil --- */
+.profile-data p {
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  padding: 10px 5px;
+  margin: 0;
+}
+.profile-data p:last-child {
+  border-bottom: none;
+}
+.profile-data strong {
+  margin-right: 10px;
+  color: #555;
+}

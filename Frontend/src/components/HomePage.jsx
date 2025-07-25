@@ -1,20 +1,21 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import '../style/styles.css';
 
 const HomePage = () => {
     return (
-            <div style={{
-                minHeight: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-            }}>
-                <div className="div-container justify-content-center align-items-center">
-                    <h1>Welcome to the Home Page</h1>
-                    <p>This is the main page of the application.</p>
-                    <p><a href="/login">Login</a> or <a href="/register">Register</a></p>
+        <div className="page-container">
+            <div className="content-card">
+                <h2>Welcome to Our App!</h2>
+                <p>This is a sample application to demonstrate JWT authentication with React.</p>
+                <div className="form-links">
+                    <p>
+                        Please <Link to="/login">Login</Link> or <Link to="/register">Register</Link> to continue.
+                    </p>
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
+}
 
-            export default HomePage;
+export default HomePage;
