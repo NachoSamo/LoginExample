@@ -1,0 +1,100 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { login } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+import '../style/styles.css'; 
+
+const Login = () => {
+
+  const { register, handleSubmit, formState: { errors }, setError } = useForm()
+
+  const onSubmit = async (data) => {
+
+    try {
+
+      const userData = {
+        userName: data.userName,
+        password: data.password,
+      } // un array con los datos del login 
+
+      await login(userData);
+      // le pasamos a login() los parametros para que ande, esa funcion luego se 
+      // encarga de validar si las credenciales son correctas
+
+      navigate("/profile"); //redirigimos a profile
+      window.location.reload(); //forzamos la recarga de la pagina je
+
+
+    } catch (error) {
+
+      console.error("Login failed:", error)
+      setError('root.serverError', {
+        type: 'manual',
+        message: error.response?.data?.msg || "Error al iniciar sesión"
+      })
+
+    }
+  };
+
+  const navigate = useNavigate();
+
+  const handleCancel = () => {
+    navigate("/")
+  }
+
+  const handleRegister = () => {
+    navigate("/register")
+  }
+
+  return (
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }}>
+      <div className="div-container justify-content-center align-items-center ">
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {errors.root?.serverError && <p style={{ color: 'red' }}>{errors.root.serverError.message}</p>}
+          <div className="form-group">
+            <label className="form-label">Username:</label>
+            <input
+              type="text"
+              className="form-input"
+              {...register('userName', { required: "username is obligatory" })}
+            />
+            {errors.userName && <p>{errors.userName.message}</p>}
+          </div>
+          <div className="form-group">
+            <label className="form-label">Password:</label>
+            <input
+              className="form-input"
+              type="password"
+              {...register('password', { required: "password is obligatory" })}
+            />
+            {errors.password && <p>{errors.password.message}</p>}
+          </div>
+          <button type="submit">Login</button>
+          <button type="button" onClick={handleCancel}>Cancel</button>
+        </form>
+        <div className="links" style={{ marginTop: '15px' }}>
+          <Link to="/forgot-password">Forgot your password?</Link>
+        </div>
+        <p>
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+          >
+            Register here
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default Login;

@@ -8,9 +8,6 @@ const Profile = () => {
     const { user , logoutContext } = useAuth();
     const navigate = useNavigate()
 
-    if (!user) {
-        return <p>Loading user data or user not found...</p>;
-    }
 
     const handleLogout = () => {
         logoutContext()
@@ -18,8 +15,13 @@ const Profile = () => {
     }
 
     return (
-        <div className="profile container mt-5
-            d-flex flex-column align-items-center">
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }}> 
+        <div className="div-container justify-content-center align-items-center" >
             <h2>USER DATA</h2>
             <p><strong>Username:</strong>{user.UserName}</p>
             <p><strong>Name:</strong> {user.name}</p>
@@ -27,6 +29,7 @@ const Profile = () => {
             <p><strong>Surname:</strong> {user.surname}</p>
             <button onClick={handleLogout}>Logout</button>
         </div>
+    </div>
     );
 }
 
